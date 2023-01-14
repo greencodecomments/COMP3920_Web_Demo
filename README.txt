@@ -1,3 +1,20 @@
+v1.13 - Separating the Header and Footer
+========================================
+With templates we can also reduce redundancy. Notice how all of our pages
+included the same code?  <html> <head> </head> <body> </body> </html>
+The only thing that changes is all the code within the <body> tag.
+So we can take everything before the body contents and move it to header.ejs
+and everything after and move it to footer.ejs. After we've done this,
+we can just include the header and footer in all our pages.
+This makes it easier to update something in the header or footer 
+for all the pages.
+
+- To Test:
+No functional changes have been made to the pages,
+but we should probably make sure none of the pages are broken.
+Test any page to make sure it works:
+ex: Go to: http://localhost:3000/contact
+
 v1.12 - Rendering Templates
 ===========================
 There is one last res.send that we haven't fixed and moved to a view -
