@@ -1,3 +1,16 @@
+v1.12 - Rendering Templates
+===========================
+There is one last res.send that we haven't fixed and moved to a view -
+it's the users display page. 
+When you create a new user, on the /submitUser page it shows all the
+users created in an html <ul> list.
+We can separate the repeated code for the <li> element with the user info
+Then we loop over the users array and include the user template.
+
+- To Test:
+Create a new user at: http://localhost:3000/createUser
+See the user in the list on: http://localhost:3000/submitUser
+
 v1.11 - Refactoring and more rendering
 ==============================
 Let's replace all the res.send() calls with res.render.

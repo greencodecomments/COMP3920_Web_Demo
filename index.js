@@ -91,13 +91,7 @@ app.post('/submitUser', (req,res) => {
 
     console.log(users);
 
-    var usershtml = "";
-    for (i = 0; i < users.length; i++) {
-        usershtml += "<li>" + users[i].username + ": " + users[i].password + "</li>";
-    }
-
-    var html = "<ul>" + usershtml + "</ul>";
-    res.send(html);
+    res.render("submitUser",{users:users});
 });
 
 app.post('/loggingin', (req,res) => {
