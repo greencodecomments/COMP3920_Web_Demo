@@ -1,3 +1,37 @@
+v1.11 - Refactoring and more rendering
+==============================
+Let's replace all the res.send() calls with res.render.
+This will mean in some cases, we'll need to pass parameters to the view,
+for example the about page uses a query parameter to change the color
+or the cat id to the cat page.
+
+- To Test:
+See that http://localhost:3000/about?color=red and 
+http://localhost:3000/about?color=%239000C0 still work with the new view
+(changing the color in the URL, changes the color of the text)
+
+See that http://localhost:3000/contact and 
+http://localhost:3000/contact?missing=1 still work with the new view
+(should provide the email entry form and show "email is required" if the 
+query parameter - missing=1 - is provided)
+When you submit an email in the contact form, it should show your email here:
+http://localhost:3000/submitEmail
+
+The 404 page still works: http://localhost:3000/invalidpage
+
+Check the cats:
+http://localhost:3000/cat/1   => Fluffy
+http://localhost:3000/cat/2   => Socks
+http://localhost:3000/cat/3   => Invalid Cat id 3
+
+
+
+- Suggestion:
+Install the EJS language support Extension in VS Code 
+for proper syntax highlighting.
+Add this to your settings.json for shortcuts:
+"emmet.includeLanguages": { "ejs": "html", }
+
 v1.10 - EJS Template rendering
 ==============================
 So far we've used res.send to construct and send html back to the client.
