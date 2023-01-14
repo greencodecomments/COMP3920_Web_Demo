@@ -1,3 +1,28 @@
+v1.10 - EJS Template rendering
+==============================
+So far we've used res.send to construct and send html back to the client.
+This really isn't scalable or manageable. It's also really bad practice.
+You should separate your code from your HTML. Otherwise, you'll have a 
+huge index.js file which continues to grow with every new page you create.
+
+This is where we can separate our HTML pages into separate files, and do
+some simple replacements for data and variables that might change those 
+pages.
+
+Enter EJS. EJS is a Simple templating language to help separate HTML from 
+your code (while still making the HTML customizable and modular).
+
+We put our HTML files in the views/ folder because that is the default
+folder, but if you prefer a different folder, you can use this line to 
+a different set of folders:
+app.set('views', path.join(__dirname, '/yourViewDirectory'));
+
+- Follow along instructions:
+npm install ejs
+
+- To Test:
+
+
 v1.9 - Keeping secrets, secret with dotenv
 ==========================================
 It's time we separate our passwords and secret keys from our code.

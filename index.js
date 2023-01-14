@@ -24,6 +24,8 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
+app.set('view engine', 'ejs');
+
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
@@ -42,7 +44,7 @@ app.use(session({
 ));
 
 app.get('/', (req,res) => {
-    res.send("<h1>Hello World!</h1>");
+    res.render("index");
 });
 
 app.get('/about', (req,res) => {
