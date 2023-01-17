@@ -1,3 +1,54 @@
+v1.14 - Connect to a MySQL database
+===================================
+Up to this point we've used the in-memory "database" to store users.
+Anytime the server reboots, we loose those users.
+Let's create a database in MySQL to store these users.
+
+When a database software system is installed, they give you an administrator
+account to use. However, this account has all the privileges to all databases
+and is too dangerous to use for your applications to connect to.
+Instead we'll create a new user, and only provide it the access it absolutely
+needs to interact with our application.
+
+Since the MySQL User and Password are secrets, they belong in the .env file.
+We'll add an example (without any real passwords) into the sample.env file 
+so that we have all the variables we need there too.
+
+We'll create a route to create our tables and see it with some data.
+
+We've added a new util function to help include other files using an absolute
+(not relative) path. 
+
+We've created a success page and an error page. We can use these pages whenever
+we need to output simple success or error messages. 
+
+- Follow along instructions:
+Create a new Database in MySQL.
+ CREATE DATABASE web_demo_1; 
+Create a new user in MySQL.
+ CREATE USER 'web_connect'@'localhost' IDENTIFIED BY "aQVY9Yp*85^M";
+Grant the user some privileges
+ GRANT CREATE, SELECT, INSERT, UPDATE, DELETE ON web_demo_1.* TO 'web_connect'@'localhost';
+
+npm install mysql2
+
+- To Test:
+Go to http://localhost:3000/createTables
+If everything worked, you'll get a success page and your user table will be added.
+Otherwise, you'll get an error message (check your console output for a detailed error).
+
+- Notes:
+Not all free database hosting services will allow you to create new users.
+It is recommended to move to more permanent, secure production database service.
+
+When creating a MySQL it is best to create the user with a single IP address that
+can access it. For example: CREATE USER 'web_connect'@'localhost'
+can only be accessed by localhost and CREATE USER 'web_connect'@'192.168.0.101'
+can only connect from the IP 192.168.0.101. 
+While CREATE USER 'web_connect'@'%' is acceptable for development environments,
+it should not be used in production environments because it allows access from
+any and all IP addresses. 
+
 v1.13 - Separating the Header and Footer
 ========================================
 With templates we can also reduce redundancy. Notice how all of our pages
