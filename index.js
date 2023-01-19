@@ -116,15 +116,16 @@ app.post('/submitUser', async (req,res) => {
 
 });
 
-app.post('/loggingin', (req,res) => {
+app.post('/loggingin', async (req,res) => {
     var username = req.body.username;
     var password = req.body.password;
 
 
-    var usershtml = "";
-    for (i = 0; i < users.length; i++) {
-        if (users[i].username == username) {
-            if (bcrypt.compareSync(password, users[i].password)) {
+    var results = await db_users.getUser({ user: username, hashedPassword: password });
+
+    if (results) {
+        if (results.length == 1) { //there should only be 1 user in the db that matches
+            if (bcrypt.compareSync(password, results[0].password)) {
                 req.session.authenticated = true;
                 req.session.username = username;
                 req.session.cookie.maxAge = expireTime;
@@ -132,9 +133,18 @@ app.post('/loggingin', (req,res) => {
                 res.redirect('/loggedIn');
                 return;
             }
+            else {
+                console.log("invalid password");
+            }
+        }
+        else {
+            console.log('invalid number of users matched: '+results.length+" (expected 1).");
+            res.redirect('/login');
+            return;            
         }
     }
 
+    console.log('user not found');
     //user and password combination not found
     res.redirect("/login");
 });

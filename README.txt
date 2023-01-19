@@ -1,3 +1,17 @@
+v1.16 - Fixing login with the new database
+==========================================
+The previous step broke the login, because we removed the in-memory "database"
+in favour of the MySQL persistent database. However, it did not fix the login
+page. Let's do this here.
+
+- To Test:
+Attempt to login using an existing user: http://localhost:3000/login
+Anything but a valid password sends you back here: http://localhost:3000/login
+A valid password sends you here: http://localhost:3000/loggedin 
+  (and sets a client cookie to store your session)
+Attempting to login using a non-existent user also redirects back to login page:
+http://localhost:3000/login
+
 v1.15 - Create User and display users
 =====================================
 Up to this point, we've stored users as an array with the server's memory.
