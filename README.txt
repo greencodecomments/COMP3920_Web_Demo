@@ -1,3 +1,17 @@
+v1.15 - Create User and display users
+=====================================
+Up to this point, we've stored users as an array with the server's memory.
+This in-memory "database" works, but only until you restart the server.
+Let's use a MySQL to store the users in a more persistent manner.
+
+- To Test:
+Create a new user at: http://localhost:3000/createUser
+See the user in the list on: http://localhost:3000/submitUser
+
+- Notes:
+Login will be broken in this version. This is because we removed the users
+in-memory "database" but haven't moved it over to the new MySQL database.
+
 v1.14 - Connect to a MySQL database
 ===================================
 Up to this point we've used the in-memory "database" to store users.

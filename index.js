@@ -10,6 +10,7 @@ const saltRounds = 12;
 
 const database = include('databaseConnection');
 const db_utils = include('database/db_utils');
+const db_users = include('database/users');
 const success = db_utils.printMySQLVersion();
 
 const port = process.env.PORT || 3000;
@@ -18,9 +19,6 @@ const app = express();
 
 const expireTime = 24 * 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
 
-
-//Users and Passwords (in memory 'database')
-var users = []; 
 
 /* secret information section */
 const mongodb_user = process.env.MONGODB_USER;
@@ -99,17 +97,23 @@ app.get('/login', (req,res) => {
     res.render("login");
 });
 
-app.post('/submitUser', (req,res) => {
+app.post('/submitUser', async (req,res) => {
     var username = req.body.username;
     var password = req.body.password;
 
     var hashedPassword = bcrypt.hashSync(password, saltRounds);
 
-    users.push({ username: username, password: hashedPassword });
+    var success = await db_users.createUser({ user: username, hashedPassword: hashedPassword });
 
-    console.log(users);
+    if (success) {
+        var results = await db_users.getUsers();
 
-    res.render("submitUser",{users:users});
+        res.render("submitUser",{users:results});
+    }
+    else {
+        res.render("errorMessage", {error: "Failed to create user."} );
+    }
+
 });
 
 app.post('/loggingin', (req,res) => {
