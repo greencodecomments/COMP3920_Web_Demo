@@ -149,12 +149,35 @@ app.post('/loggingin', async (req,res) => {
     res.redirect("/login");
 });
 
+
+function isValidSession(req) {
+	if (req.session.authenticated) {
+		return true;
+	}
+	return false;
+}
+
+function sessionValidation(req, res, next) {
+	if (!isValidSession(req)) {
+		req.session.destroy();
+		res.redirect('/login');
+		return;
+	}
+	else {
+		next();
+	}
+}
+
+app.use('/loggedin', sessionValidation);
+
 app.get('/loggedin', (req,res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-    }
     res.render("loggedin");
 });
+
+app.get('/loggedin/info', (req,res) => {
+    res.render("loggedin-info");
+});
+
 
 app.get('/cat/:id', (req,res) => {
     var cat = req.params.id;

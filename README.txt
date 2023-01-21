@@ -1,3 +1,32 @@
+v1.17 - Authentication middleware
+=================================
+What is middleware and why should we use it?
+Middleware are functions that we define that always get run when we get a request
+for a page hit, but before we render the page. They are useful for parsing data
+that we know that we might need (parsing the form fields in a POST is middleware
+ex: app.use(express.urlencoded({extended: false})); ). We are also using middleware
+to create and parse our cookies and handle our sessions for us. 
+ex: app.use(session({...}));
+
+Our site so far only has a single page that requires a login, but imagine a site
+with dozens (or possibly even more) of pages where many of them require the user
+to be logged in. We'd want a centralized single function to manage the login 
+(to make the code more manageable and maintainable). Also, we'd want to make sure
+we didn't overlook authentication when we create new pages - we wouldn't want to 
+introduce a security risk, simply by forgetting to check for authentication.
+
+By using middleware, we can say that all pages in a certain category (for example
+everything under the /members folder must require a login). With a middleware 
+authentication function, we can say any page hit in the the /members folder
+must pass the authentication check before displaying the page.
+
+- To Test:
+Login using an existing user: http://localhost:3000/login
+A valid password sends you here: http://localhost:3000/loggedin 
+And this page should work too: http://localhost:3000/loggedin/info 
+Delete the session cookie (from the client or server) and
+both those sites shouldn't work.
+
 v1.16 - Fixing login with the new database
 ==========================================
 The previous step broke the login, because we removed the in-memory "database"
