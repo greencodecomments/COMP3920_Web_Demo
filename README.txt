@@ -1,3 +1,62 @@
+v1.18 - Authorization middleware
+=================================
+Although authorization sounds like authentication, they are both very different.
+Authentication is about verifying that a user is who they claim to be.
+This is often verifying their password matches what is in the database for that
+username or email address. It may also include a fingerprint scan, a retina/iris
+scan, a notification or text send to a phone or email adress or other methods of
+Multi-factor authentication (MFA).
+
+Authorization on the other hand is realizing that different users, depending on who
+they are should see different things. Administrators typically have full access
+to everything the site, while users may only have the ability to edit their own
+data, but only view everyone else's data. Guests may have even less permissions
+and only have the ability to view the data and not edit anything. 
+
+We will store the user's type in the session information so that we can check
+it before we render the page. Using middleware, we'll ensure only admins can
+view the admin page.
+
+- Follow along instructions:
+
+# MySQL 
+#Create the new user_type table 
+CREATE TABLE `user_type` (
+  `user_type_id` int NOT NULL AUTO_INCREMENT,
+  `type` varchar(25) NOT NULL,
+  PRIMARY KEY (`user_type_id`),
+  UNIQUE KEY `unique_type` (`type`)
+);
+
+#Create the user types:
+INSERT INTO `user_type` (`user_type_id`, `type`) VALUES ('1', 'user');
+INSERT INTO `user_type` (`user_type_id`, `type`) VALUES ('2', 'admin');
+
+#Create a new column in the user table as an FK to user_type
+# and Set all existing users as type = 1 (standard user)
+ALTER TABLE `web_demo_1`.`user` 
+ADD COLUMN `user_type_id` INT NOT NULL DEFAULT 1 AFTER `password`,
+ADD INDEX `user_user_type_id_idx` (`user_type_id` ASC) VISIBLE;
+;
+
+#Modify the new type column to enforce FK constraint
+ALTER TABLE `web_demo_1`.`user` 
+ADD CONSTRAINT `user_user_type_id`
+  FOREIGN KEY (`user_type_id`)
+  REFERENCES `web_demo_1`.`user_type` (`user_type_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+#Pick one user to promote to 'Admin'
+UPDATE `user` SET `user_type_id` = '2' WHERE (`user_id` = 1);
+
+- To Test:
+Login using an admin user: http://localhost:3000/login
+This page should be allowed: http://localhost:3000/admin
+Delete your session cookie and refresh, you should be redirected to /login
+Login using a normal user (non-admin): http://localhost:3000/login
+This page should not be allowed: http://localhost:3000/admin
+
 v1.17 - Authentication middleware
 =================================
 What is middleware and why should we use it?

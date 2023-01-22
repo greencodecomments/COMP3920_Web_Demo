@@ -127,6 +127,7 @@ app.post('/loggingin', async (req,res) => {
         if (results.length == 1) { //there should only be 1 user in the db that matches
             if (bcrypt.compareSync(password, results[0].password)) {
                 req.session.authenticated = true;
+                req.session.user_type = results[0].type; 
                 req.session.username = username;
                 req.session.cookie.maxAge = expireTime;
         
@@ -168,7 +169,26 @@ function sessionValidation(req, res, next) {
 	}
 }
 
+function isAdmin(req) {
+    if (req.session.user_type == 'admin') {
+        return true;
+    }
+    return false;
+}
+
+function adminAuthorization(req, res, next) {
+	if (!isAdmin(req)) {
+        res.status(403);
+        res.render("errorMessage", {error: "Not Authorized"});
+        return;
+	}
+	else {
+		next();
+	}
+}
+
 app.use('/loggedin', sessionValidation);
+app.use('/loggedin/admin', adminAuthorization);
 
 app.get('/loggedin', (req,res) => {
     res.render("loggedin");
@@ -178,6 +198,9 @@ app.get('/loggedin/info', (req,res) => {
     res.render("loggedin-info");
 });
 
+app.get('/loggedin/admin', (req,res) => {
+    res.render("admin");
+});
 
 app.get('/cat/:id', (req,res) => {
     var cat = req.params.id;
