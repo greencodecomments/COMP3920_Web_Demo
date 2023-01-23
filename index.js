@@ -202,12 +202,60 @@ app.get('/loggedin/admin', (req,res) => {
     res.render("admin");
 });
 
+app.get('/loggedin/memberinfo', (req,res) => {
+    res.render("memberInfo", {username: req.session.username, user_type: req.session.user_type});
+});
+
+
 app.get('/cat/:id', (req,res) => {
     var cat = req.params.id;
 
     res.render("cat", {cat: cat});
 });
 
+
+app.get('/api', (req,res) => {
+	var user = req.session.user;
+    var user_type = req.session.user_type;
+	console.log("api hit ");
+
+	var jsonResponse = {
+		success: false,
+		data: null,
+		date: new Date()
+	};
+
+	
+	if (!isValidSession(req)) {
+		jsonResponse.success = false;
+		res.status(401);  //401 == bad user
+		res.json(jsonResponse);
+		return;
+	}
+
+	if (typeof id === 'undefined') {
+		jsonResponse.success = true;
+		if (user_type === "admin") {
+			jsonResponse.data = ["A","B","C","D"];
+		}
+		else {
+			jsonResponse.data = ["A","B"];
+		}
+	}
+	else {
+		if (!isAdmin(req)) {
+			jsonResponse.success = false;
+			res.status(403);  //403 == good user, but, user should not have access
+			res.json(jsonResponse);
+			return;
+		}
+		jsonResponse.success = true;
+		jsonResponse.data = [id + " - details"];
+	}
+
+	res.json(jsonResponse);
+
+});
 
 app.use(express.static(__dirname + "/public"));
 
